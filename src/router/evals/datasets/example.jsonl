@@ -1,0 +1,5 @@
+{"query": "count the rows in the orders table", "expected_backends": ["sql"], "expect_contains": ["sql"]}
+{"query": "explain the concept of idempotency", "expected_backends": ["vector"], "expect_contains": ["vector"]}
+{"query": "what is the latest news today", "expected_backends": ["web"], "expect_contains": ["web"]}
+{"query": "current weather and the stock price", "expected_backends": ["api"], "expect_contains": ["api"]}
+{"query": "count rows and explain the concept", "expected_backends": ["sql", "vector"], "expect_contains": []}
