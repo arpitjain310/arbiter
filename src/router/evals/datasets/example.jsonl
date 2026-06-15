@@ -1,5 +1,36 @@
 {"query": "count the rows in the orders table", "expected_backends": ["sql"], "expect_contains": ["sql"]}
+{"query": "sum the revenue column", "expected_backends": ["sql"], "expect_contains": ["sql"]}
+{"query": "average order value grouped by table", "expected_backends": ["sql"], "expect_contains": ["sql"]}
+{"query": "count distinct customers", "expected_backends": ["sql"], "expect_contains": ["sql"]}
+{"query": "rows in the inventory table", "expected_backends": ["sql"], "expect_contains": ["sql"]}
+{"query": "sum and average of the table", "expected_backends": ["sql"], "expect_contains": ["sql"]}
 {"query": "explain the concept of idempotency", "expected_backends": ["vector"], "expect_contains": ["vector"]}
+{"query": "find documents similar to this report", "expected_backends": ["vector"], "expect_contains": ["vector"]}
+{"query": "tell me about distributed consensus", "expected_backends": ["vector"], "expect_contains": ["vector"]}
+{"query": "explain how the algorithm works", "expected_backends": ["vector"], "expect_contains": ["vector"]}
 {"query": "what is the latest news today", "expected_backends": ["web"], "expect_contains": ["web"]}
-{"query": "current weather and the stock price", "expected_backends": ["api"], "expect_contains": ["api"]}
-{"query": "count rows and explain the concept", "expected_backends": ["sql", "vector"], "expect_contains": []}
+{"query": "current headlines please", "expected_backends": ["web"], "expect_contains": ["web"]}
+{"query": "the latest developments in the field", "expected_backends": ["web"], "expect_contains": ["web"]}
+{"query": "the weather forecast for the trip", "expected_backends": ["api"], "expect_contains": ["api"]}
+{"query": "stock price of the company", "expected_backends": ["api"], "expect_contains": ["api"]}
+{"query": "price of a barrel of oil", "expected_backends": ["api"], "expect_contains": ["api"]}
+{"query": "count rows and explain the concept", "expected_backends": ["sql", "vector"], "expect_contains": ["sql", "vector"]}
+{"query": "average price grouped by category", "expected_backends": ["sql", "api"], "expect_contains": ["sql", "api"]}
+{"query": "latest news on the stock price", "expected_backends": ["web", "api"], "expect_contains": ["web", "api"]}
+{"query": "count the rows and the latest news", "expected_backends": ["sql", "web"], "expect_contains": ["sql", "web"]}
+{"query": "explain the concept behind the current events", "expected_backends": ["vector", "web"], "expect_contains": ["vector", "web"]}
+{"query": "similar concepts and their average values in the table", "expected_backends": ["vector", "sql"], "expect_contains": ["vector", "sql"]}
+{"query": "what is the temperature outside", "expected_backends": ["api"], "expect_contains": ["api"]}
+{"query": "who won the match last night", "expected_backends": ["web"], "expect_contains": ["web"]}
+{"query": "describe machine learning to me", "expected_backends": ["vector"], "expect_contains": ["vector"]}
+{"query": "is it going to rain tomorrow", "expected_backends": ["api"], "expect_contains": ["api"]}
+{"query": "summarize this research paper", "expected_backends": ["vector"], "expect_contains": ["vector"]}
+{"query": "what's trending right now", "expected_backends": ["web"], "expect_contains": ["web"]}
+{"query": "how many orders were placed yesterday", "expected_backends": ["sql"], "expect_contains": ["sql"]}
+{"query": "compute the total sales figure", "expected_backends": ["sql"], "expect_contains": ["sql"]}
+{"query": "tell me about today's weather", "expected_backends": ["api", "web"], "expect_contains": ["api", "web"]}
+{"query": "the average temperature this week", "expected_backends": ["api"], "expect_contains": ["api"]}
+{"query": "explain similar trends in the latest data", "expected_backends": ["vector", "web"], "expect_contains": ["vector", "web"]}
+{"query": "current price of gold", "expected_backends": ["api", "web"], "expect_contains": ["api", "web"]}
+{"query": "news about the concept of inflation", "expected_backends": ["web", "vector"], "expect_contains": ["web", "vector"]}
+{"query": "count how many similar records exist", "expected_backends": ["sql", "vector"], "expect_contains": ["sql", "vector"]}
