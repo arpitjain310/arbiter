@@ -1,8 +1,8 @@
 """Backend abstraction: a source the router can query.
 
-The router speaks only this contract. query() reports failure as
-Result(error=...) rather than raising, so the router can degrade gracefully
-instead of crashing the whole route.
+Each backend declares its latency and cost so the budget can filter
+before fan-out. query() surfaces failures as Result(error=...) rather than
+raising, so the router degrades gracefully instead of crashing.
 """
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ class Query:
 class Result:
     backend: str
     content: str
-    # Observability: per-call latency + cost feed budgeting and tracing.
+    # Per-call latency and cost; populated by query().
     latency_ms: float = 0.0
     cost_usd: float = 0.0
     error: str | None = None
@@ -32,11 +32,13 @@ class Result:
 
 class Backend(ABC):
     name: str
+    # Before fan-out so the budget can filter without calling query().
+    cost_usd: float
+    expected_latency_ms: float
 
     @abstractmethod
     def can_handle(self, query: Query) -> float:
-        """Confidence in [0, 1] that this backend is relevant to the query.
-        The classifier uses this to pick backend(s)."""
+        """Confidence in [0, 1] that this backend is relevant to the query."""
 
     @abstractmethod
     def query(self, query: Query) -> Result:

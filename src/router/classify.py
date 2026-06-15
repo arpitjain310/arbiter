@@ -21,6 +21,6 @@ def select_backends(
         if score >= threshold
     ]
     if not chosen:
-        # Never return empty result: we degrade to the cheapest backend.
-        chosen = [min(backends, key=lambda b: getattr(b, "cost_usd", 0.0))]
+        # Never return empty: degrade to the cheapest backend.
+        chosen = [min(backends, key=lambda b: b.cost_usd)]
     return chosen[:max_fanout]

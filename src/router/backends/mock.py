@@ -18,7 +18,7 @@ class MockBackend(Backend):
     ) -> None:
         self.name = name
         self.keywords = keywords
-        self.latency_ms = latency_ms
+        self.expected_latency_ms = latency_ms
         self.cost_usd = cost_usd
         self._failing = False
 
@@ -37,7 +37,7 @@ class MockBackend(Backend):
         return Result(
             backend=self.name,
             content=f"[{self.name}] answer for: {query.text}",
-            latency_ms=self.latency_ms,
+            latency_ms=self.expected_latency_ms,
             cost_usd=self.cost_usd,
         )
 
