@@ -24,3 +24,9 @@ def select_backends(
         # Never return empty: degrade to the cheapest backend.
         chosen = [min(backends, key=lambda b: b.cost_usd)]
     return chosen[:max_fanout]
+
+
+def select_all(query: Query, backends: list[Backend]) -> list[Backend]:
+    """Route to every backend. Maximal recall, poor precision — the baseline the
+    eval harness measures the threshold classifier against."""
+    return list(backends)

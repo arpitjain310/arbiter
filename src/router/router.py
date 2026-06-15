@@ -9,6 +9,7 @@ always answerable.
 from __future__ import annotations
 
 import time
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, wait
 from dataclasses import dataclass, field
 from enum import Enum
@@ -17,6 +18,8 @@ from .backend import Backend, Query, Result
 from .budget import Budget
 from .classify import select_backends
 from .observability import Trace
+
+Classifier = Callable[[Query, list[Backend]], list[Backend]]
 
 
 class FallbackRung(Enum):
@@ -58,15 +61,18 @@ class Router:
         backends: list[Backend],
         budget: Budget | None = None,
         retry_backoff_s: float = 0.05,
+        classifier: Classifier | None = None,
     ) -> None:
         self.backends = backends
         self.budget = budget or Budget()
         self.retry_backoff_s = retry_backoff_s
+        # Swappable so the eval harness can measure alternative strategies
+        self.classifier = classifier or select_backends
 
     def route(self, query: Query) -> RouterResponse:
         trace = Trace()
         with trace.span("classify"):
-            chosen = select_backends(query, self.backends)
+            chosen = self.classifier(query, self.backends)
         dropped_by_classifier = [b for b in self.backends if b not in chosen]
         with trace.span("budget"):
             affordable = self.budget.affordable(chosen, query)
