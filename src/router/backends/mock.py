@@ -21,10 +21,15 @@ class MockBackend(Backend):
         self.expected_latency_ms = latency_ms
         self.cost_usd = cost_usd
         self._failing = False
+        self._fail_remaining = 0
 
     def set_failing(self, failing: bool = True) -> None:
         """Arrange for query() to report an error, simulating an outage."""
         self._failing = failing
+
+    def fail_n_times(self, n: int) -> None:
+        """Fail the next n queries, then recover.The fallback ladder's retry logic should absorb these failures.."""
+        self._fail_remaining = n
 
     def can_handle(self, query: Query) -> float:
         text = query.text.lower()
@@ -32,6 +37,9 @@ class MockBackend(Backend):
         return min(1.0, hits / max(1, len(self.keywords)))
 
     def query(self, query: Query) -> Result:
+        if self._fail_remaining > 0:
+            self._fail_remaining -= 1
+            return Result(backend=self.name, content="", error="transient failure")
         if self._failing:
             return Result(backend=self.name, content="", error="injected failure")
         return Result(
