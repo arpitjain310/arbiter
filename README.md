@@ -8,8 +8,9 @@
 > that proves routing quality with precision and recall.
 
 **Status:** work in progress. Classification, parallel fan-out, merge, the
-fallback ladder, cost/latency budgeting, tracing, and precision/recall evals
-run against mock backends.
+fallback ladder, cost/latency budgeting, tracing with JSONL export, and
+precision/recall evals run against mock backends, with a SQLite backend
+wired behind the same contract.
 
 ---
 
@@ -118,5 +119,6 @@ python -m venv .venv && . .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
 pytest -q
 route "count the rows in the orders table"
+route "count the rows in the orders table" --provider sqlite
 python -m router.evals.harness
 ```
