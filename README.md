@@ -7,9 +7,9 @@
 > cost/latency budgeting, a structured fallback ladder, and an eval harness
 > that proves routing quality with precision and recall.
 
-**Status:** work in progress. Classification, sequential fan-out, merge, cost
-budgeting, and tracing run against mock backends. Parallel fan-out, the
-fallback ladder, and eval precision/recall are in progress.
+**Status:** work in progress. Classification, parallel fan-out, merge, the
+fallback ladder, cost/latency budgeting, tracing, and precision/recall evals
+run against mock backends.
 
 ---
 
@@ -89,9 +89,18 @@ Routing accuracy is measured as **precision and recall**, not a subset check:
 - **Recall**: of the backends needed, what fraction were routed to?
 
 The eval dataset includes ambiguous, multi-intent, and keyword-free cases — the
-ones a naive keyword heuristic gets wrong. A keyword-baseline classifier runs on
-the same dataset so the precision/recall numbers mean something because there is
-a worse number beside them.
+ones a naive heuristic gets wrong — so the score has headroom instead of pinning
+at 100%. A **route-all baseline** runs on the same dataset, and the numbers mean
+something because there is a worse one beside them:
+
+| strategy | precision | recall | latency | cost |
+|----------|-----------|--------|---------|------|
+| threshold classifier | **80%** | 81% | 47ms | $0.0007 |
+| route-all baseline | 33% | 100% | 120ms | $0.0030 |
+
+Routing to everything maxes recall by brute force but drops precision — and
+pays for it in latency and cost. A pytest **regression gate** asserts precision and recall clear a
+threshold, so routing quality fails CI when it drops.
 
 ## Real backend
 
