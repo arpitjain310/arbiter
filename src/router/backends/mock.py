@@ -5,6 +5,8 @@ graceful-degradation paths are deterministic in tests.
 """
 from __future__ import annotations
 
+import time
+
 from ..backend import Backend, Query, Result
 
 
@@ -22,10 +24,15 @@ class MockBackend(Backend):
         self.cost_usd = cost_usd
         self._failing = False
         self._fail_remaining = 0
+        self._delay = 0.0
 
     def set_failing(self, failing: bool = True) -> None:
         """Arrange for query() to report an error, simulating an outage."""
         self._failing = failing
+
+    def set_delay(self, seconds: float) -> None:
+        """Make query() block, so it can overrun the latency budget and time out."""
+        self._delay = seconds
 
     def fail_n_times(self, n: int) -> None:
         """Fail the next n queries, then recover.The fallback ladder's retry logic should absorb these failures.."""
@@ -37,6 +44,8 @@ class MockBackend(Backend):
         return min(1.0, hits / max(1, len(self.keywords)))
 
     def query(self, query: Query) -> Result:
+        if self._delay:
+            time.sleep(self._delay)
         if self._fail_remaining > 0:
             self._fail_remaining -= 1
             return Result(backend=self.name, content="", error="transient failure")

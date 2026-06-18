@@ -103,20 +103,22 @@ class Router:
         """Query backends in parallel; a slow or raising backend becomes an error."""
         results: list[Result] = []
         timeout_s = self.budget.max_latency_ms / 1000
-        with ThreadPoolExecutor(max_workers=max(1, len(backends))) as ex:
+        ex = ThreadPoolExecutor(max_workers=max(1, len(backends)))
+        try:
             future_to_backend = {ex.submit(b.query, query): b for b in backends}
             done, pending = wait(future_to_backend, timeout=timeout_s)
-        for fut in done:
-            backend = future_to_backend[fut]
-            try:
-                results.append(fut.result())
-            except Exception as exc:
-                results.append(Result(backend=backend.name, content="", error=str(exc)))
-        for fut in pending:
-            fut.cancel()
-            results.append(
-                Result(backend=future_to_backend[fut].name, content="", error="timeout")
-            )
+            for fut in done:
+                backend = future_to_backend[fut]
+                try:
+                    results.append(fut.result())
+                except Exception as exc:
+                    results.append(Result(backend=backend.name, content="", error=str(exc)))
+            for fut in pending:
+                results.append(
+                    Result(backend=future_to_backend[fut].name, content="", error="timeout")
+                )
+        finally:
+            ex.shutdown(wait=False, cancel_futures=True)
         return results
 
     def _fallback_ladder(
