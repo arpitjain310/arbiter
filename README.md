@@ -7,10 +7,20 @@
 > cost/latency budgeting, a structured fallback ladder, and an eval harness
 > that proves routing quality with precision and recall.
 
-**Status:** work in progress. Classification, parallel fan-out, merge, the
-fallback ladder, cost/latency budgeting, tracing with JSONL export, and
-precision/recall evals run against mock backends, with a SQLite backend
-wired behind the same contract.
+**Status:** v0.1.0. Classification, parallel fan-out, merge, the fallback
+ladder, cost/latency budgeting, tracing with JSONL export, and precision/recall
+evals run against mock backends, with a SQLite backend wired behind the same
+contract.
+
+## Demo
+
+![arbiter fallback demo](docs/demo.gif)
+
+A query routes to `sql`. With `sql` forced down, the route doesn't raise — it
+steps down the fallback ladder: retry the primary, then route to a backend the
+classifier had dropped, which answers. The trace records the rungs taken
+(`fallback=['primary', 'retry', 'secondary']`). Then the eval harness prints
+routing precision/recall against a route-all baseline.
 
 ---
 
