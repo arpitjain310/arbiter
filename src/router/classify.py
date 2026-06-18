@@ -15,6 +15,8 @@ def select_backends(
     threshold: float = 0.1,
     max_fanout: int = 3,
 ) -> list[Backend]:
+    if not backends:
+        return []
     scored = [(b.can_handle(query), b) for b in backends]
     chosen = [
         b for score, b in sorted(scored, key=lambda s: s[0], reverse=True)
