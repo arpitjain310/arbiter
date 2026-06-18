@@ -128,7 +128,7 @@ The engine is backend-agnostic. SQLite is the one real backend:
 python -m venv .venv && . .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
 pytest -q
-route "count the rows in the orders table"
-route "count the rows in the orders table" --provider sqlite
+arbiter "count the rows in the orders table"
+arbiter "count the rows in the orders table" --provider sqlite
 python -m router.evals.harness
 ```

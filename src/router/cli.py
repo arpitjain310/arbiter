@@ -18,7 +18,7 @@ def build_backends(provider: str, db: str) -> list[Backend]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="route")
+    parser = argparse.ArgumentParser(prog="arbiter")
     parser.add_argument("query")
     parser.add_argument("--provider", choices=["mock", "sqlite"], default="mock")
     parser.add_argument("--db", default=":memory:", help="SQLite path for --provider sqlite")
